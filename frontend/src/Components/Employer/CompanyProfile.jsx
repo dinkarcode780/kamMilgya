@@ -1,30 +1,25 @@
-
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { fetchCurrentRecruiter } from "../../app/auth/authThunks";
 import { updateRecruiterProfile } from "../../app/Employe/thunkemploye";
-// import { fetchCurrentRecruiter } from "../../App/auth/authSlice";
+
 
 const CompanyProfile = () => {
   const dispatch = useDispatch();
-  // const authRecruiter = useSelector((state) => state.auth.recruiter);
   const authRecruiter = useSelector((state) => state.auth.recruiter);
 
-  // const {recruiter} = useSelector((state) => state.auth.recruiter);
 
-  const recruiter = authRecruiter; // no need for updatedRecruiter
+  const recruiter = authRecruiter;
 
   console.log(recruiter, "helloo");
 
   const updatedRecruiter = useSelector((state) => state.auth.updatedRecruiter);
 
-  // const recruiter = updatedRecruiter || authRecruiter;
 
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(recruiter || {});
   const [logoFile, setLogoFile] = useState(null);
-
 
   const fetchDataAfterUpdate = () => {
     dispatch(fetchCurrentRecruiter());
@@ -50,49 +45,19 @@ const CompanyProfile = () => {
     }
   };
 
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   const formPayload = new FormData();
-
-  //   for (const key in formData) {
-  //     if (formData[key] !== undefined && formData[key] !== null) {
-  //       formPayload.append(key, formData[key]);
-  //     }
-  //   }
-
-  //   if (logoFile) formPayload.append("companyLogo", logoFile);
-
-  //   dispatch(
-  //     updateRecruiterProfile({
-  //       recruiterId: recruiter._id,
-  //       payload: formPayload,
-  //     })
-  //   )
-  //     .unwrap()
-  //     .then(() => {
-  //       toast.success("Company profile updated successfully!");
-  //       setFormData();
-  //       setIsEditing(false);
-  //       fetchDataAfterUpdate();
-  //     })
-  //     .catch((err) => toast.error(err || "Update failed!"));
-  // };
-
 const handleSubmit = (e) => {
   e.preventDefault();
   const formPayload = new FormData();
 
   for (const key in formData) {
-    if (key === "companyLogo") continue; 
+    if (key === "companyLogo") continue;
     if (formData[key] !== undefined && formData[key] !== null) {
       formPayload.append(key, formData[key]);
     }
   }
 
-  
   if (logoFile) formPayload.append("companyLogo", logoFile);
-  
+
   dispatch(
     updateRecruiterProfile({
       recruiterId: recruiter._id,
@@ -108,6 +73,25 @@ const handleSubmit = (e) => {
     .catch((err) => toast.error(err || "Update failed!"));
 };
 
+// const handleSubmit = (e) => {
+//   e.preventDefault();
+
+//   const formPayload = new FormData();
+//   for (const key in formData) {
+//     if (key === "companyLogo") continue;
+//     formPayload.append(key, formData[key]);
+//   }
+
+//   if (logoFile) {
+//     console.log("Uploading file:", logoFile);
+//     formPayload.append("companyLogo", logoFile);
+//   }
+
+//   dispatch(updateRecruiterProfile({
+//     recruiterId: recruiter._id,
+//     payload: formPayload
+//   }));
+// };
 
   return (
     <div
@@ -128,10 +112,10 @@ const handleSubmit = (e) => {
         {/* Logo */}
         <div className="flex justify-center mb-6">
           {recruiter.companyLogo ?(
-            <img 
-              className="rounded-full w-32 h-32 object-cover border-4 border-gray-200" 
-              src={formData.companyLogo} 
-              alt="Company Logo" 
+            <img
+              className="rounded-full w-32 h-32 object-cover border-4 border-gray-200"
+              src={formData.companyLogo}
+              alt="Company Logo"
             />
           ) : (
             <div className="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center text-gray-400 border-4 border-gray-200">
@@ -201,7 +185,7 @@ const handleSubmit = (e) => {
                 onChange={handleChange}
               />
             </div>
-            
+
             <div className="mt-8">
               <label className="block font-medium text-sm text-gray-600 mb-2">
                 About Company
@@ -215,7 +199,7 @@ const handleSubmit = (e) => {
                 placeholder="Tell us about your company..."
               />
             </div>
-            
+
             <div className="mt-8">
               <label className="block font-medium text-sm text-gray-600 mb-2">
                 Company Logo
@@ -229,7 +213,7 @@ const handleSubmit = (e) => {
               />
               <p className="text-xs text-gray-500 mt-1">Upload a square image for best results</p>
             </div>
-            
+
             <div className="mt-10 pt-6 border-t border-gray-200">
               <button
                 type="submit"
@@ -274,4 +258,159 @@ const Input = ({ label, name, value, onChange }) => (
 
 export default CompanyProfile;
 
+// import React, { useEffect, useState } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import { toast } from "react-toastify";
+// import { fetchCurrentRecruiter } from "../../app/auth/authThunks";
+// import { updateRecruiterProfile } from "../../app/Employe/thunkemploye";
 
+// const CompanyProfile = () => {
+//   const dispatch = useDispatch();
+//   const recruiter = useSelector((state) => state.auth.recruiter);
+
+//   const [isEditing, setIsEditing] = useState(false);
+//   const [formData, setFormData] = useState({});
+//   const [logoFile, setLogoFile] = useState(null);
+//   const [logoPreview, setLogoPreview] = useState(null);
+
+//   useEffect(() => {
+//     dispatch(fetchCurrentRecruiter());
+//   }, [dispatch]);
+
+//   useEffect(() => {
+//     if (recruiter) {
+//       setFormData(recruiter);
+//       setLogoPreview(recruiter.companyLogo || null);
+//     }
+//   }, [recruiter]);
+
+//   if (!recruiter) return <div>Loading recruiter data...</div>;
+
+//   const handleChange = (e) => {
+//     const { name, value, type, files } = e.target;
+//     if (type === "file") {
+//       setLogoFile(files[0]);
+//       setLogoPreview(URL.createObjectURL(files[0]));
+//     } else {
+//       setFormData({ ...formData, [name]: value });
+//     }
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     const payload = new FormData();
+
+//     Object.keys(formData).forEach((key) => {
+//       if (
+//         key !== "companyLogo" &&
+//         formData[key] !== undefined &&
+//         formData[key] !== null
+//       ) {
+//         payload.append(key, formData[key]);
+//       }
+//     });
+
+//     if (logoFile) payload.append("companyLogo", logoFile);
+
+//     try {
+//       await dispatch(
+//         updateRecruiterProfile({ recruiterId: recruiter._id, payload })
+//       ).unwrap();
+//       toast.success("Profile updated successfully!");
+//       setIsEditing(false);
+//       dispatch(fetchCurrentRecruiter());
+//     } catch (err) {
+//       toast.error(err || "Update failed!");
+//     }
+//   };
+
+//   return (
+//     <div className="max-w-4xl mx-auto mt-8 p-6 bg-white shadow rounded">
+//       <div className="flex justify-between items-center mb-6">
+//         <h2 className="text-2xl font-bold">Company Profile</h2>
+//         <button
+//           onClick={() => setIsEditing(!isEditing)}
+//           className="px-4 py-2 bg-blue-600 text-white rounded"
+//         >
+//           {isEditing ? "Cancel" : "Edit Profile"}
+//         </button>
+//       </div>
+
+//       <div className="flex flex-col items-center mb-6">
+//         <img
+//           src={logoPreview || "https://via.placeholder.com/150"}
+//           alt="Company Logo"
+//           className="w-32 h-32 rounded-full object-cover border-2 border-gray-300"
+//         />
+//       </div>
+
+//       {isEditing ? (
+//         <form onSubmit={handleSubmit} className="space-y-4">
+//           <input
+//             type="text"
+//             name="companyName"
+//             value={formData.companyName || ""}
+//             onChange={handleChange}
+//             placeholder="Company Name"
+//             className="w-full border px-3 py-2 rounded"
+//           />
+
+//           <input
+//           type="text"
+//             label="Contact Person"
+//             name="contactPerson"
+//             value={formData.contactPerson}
+//             onChange={handleChange}
+//             className="w-full border px-3 py-2 rounded"
+//           />
+
+
+//           <input
+//             type="text"
+//             name="industry"
+//             value={formData.industry || ""}
+//             onChange={handleChange}
+//             placeholder="Industry"
+//             className="w-full border px-3 py-2 rounded"
+//           />
+//           <input
+//             type="text"
+//             name="website"
+//             value={formData.website || ""}
+//             onChange={handleChange}
+//             placeholder="Website"
+//             className="w-full border px-3 py-2 rounded"
+//           />
+//           <input
+//             type="file"
+//             name="companyLogo"
+//             accept="image/*"
+//             onChange={handleChange}
+//             className="w-full border px-3 py-2 rounded"
+//           />
+//           <button
+//             type="submit"
+//             className="px-4 py-2 bg-green-600 text-white rounded"
+//           >
+//             Save Changes
+//           </button>
+//         </form>
+//       ) : (
+//         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+//           <Detail label="Company Name" value={formData.companyName} />
+//           <Detail label="Industry" value={formData.industry} />
+//           <Detail label="Website" value={formData.website} />
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// const Detail = ({ label, value }) => (
+//   <div>
+//     <h3 className="font-semibold">{label}</h3>
+//     <p>{value || "N/A"}</p>
+//   </div>
+// );
+
+// export default CompanyProfile;

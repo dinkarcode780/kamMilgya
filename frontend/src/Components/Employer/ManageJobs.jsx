@@ -214,7 +214,7 @@ useEffect(() => {
                  
                   className="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
                 >
-                  View Applications
+                  View Details
                 </button>
 
                 <button

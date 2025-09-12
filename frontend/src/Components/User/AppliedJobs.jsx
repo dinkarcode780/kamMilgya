@@ -258,11 +258,13 @@ const AppliedJobs = () => {
       name: "Job Title",
       selector: (row) => row.job?.title || "N/A",
       sortable: true,
+      wrap: true,
     },
     {
       name: "Company",
       selector: (row) => row.job?.recruiter?.companyName || "N/A",
       sortable: true,
+      wrap: true,
     },
     {
       name: "Location",
@@ -347,7 +349,14 @@ const AppliedJobs = () => {
         persistTableHead
         responsive
          paginationPerPage={10} // default rows per page
-  paginationRowsPerPageOptions={[5, 10, 20, 50, 100, `Total ${filteredJobs.length}`]} 
+  paginationRowsPerPageOptions={[5, 10, 20, 50, 100]}
+  
+ paginationComponentOptions={{
+    rowsPerPageText: `Rows per page (Total ${filteredJobs.length})`,
+    rangeSeparatorText: "of", 
+    selectAllRowsItem: true,
+    selectAllRowsItemText: "All",
+  }}
       />
 
       {/* ✅ Modal */}

@@ -268,12 +268,12 @@ export const updateRecruiterProfile = async (req, res) => {
     });
   }
 
-  // ✅ File upload override
+ 
   if (req.file?.path) {
     payload.companyLogo = req.file.path;
   }
 
-  console.log(req.file,"heeeee")
+
   try {
     const { recruiterId } = req.query;
     if (!recruiterId)

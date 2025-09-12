@@ -117,10 +117,12 @@ export const updateRecruiterProfile = createAsyncThunk(
     try {
       const response = await axios.put(
         `/api/recruiter?recruiterId=${recruiterId}`,
-        payload // FormData object
-        // DO NOT set headers manually
+        payload,
+        {
+          headers: { "Content-Type": "multipart/form-data" }, // Important for file
+        }
       );
-      return response.data; 
+      return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.error || err.message);
     }

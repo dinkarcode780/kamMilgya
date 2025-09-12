@@ -188,6 +188,19 @@ const AddCategory = () => {
             ? `No categories found matching "${searchTerm}"`
             : "No categories found"
         }
+
+         paginationPerPage={10} 
+  paginationRowsPerPageOptions={[5, 10, 20, 50, 100]} 
+
+  paginationComponentOptions={{
+    rowsPerPageText: `Rows per page (Total ${ filteredCategories.length})`,
+    rangeSeparatorText: "of", 
+    selectAllRowsItem: true,
+    selectAllRowsItemText: "All",
+
+  }}
+
+
       />
     </div>
   );

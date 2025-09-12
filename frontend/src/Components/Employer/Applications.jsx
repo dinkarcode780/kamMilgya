@@ -223,7 +223,16 @@ const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY;
                 : "No applicants found"
             }
              paginationPerPage={10} 
-  paginationRowsPerPageOptions={[5, 10, 20, 50, 100, `Total ${filteredApplicants.length}`]}
+  paginationRowsPerPageOptions={[5, 10, 20, 50, 100]}
+
+  paginationComponentOptions={{
+    rowsPerPageText: `Rows per page (Total ${ filteredApplicants.length})`,
+    rangeSeparatorText: "of", 
+    selectAllRowsItem: true,
+    selectAllRowsItemText: "All",
+
+  }}
+
           />
         </div>
       )}

@@ -234,7 +234,15 @@ const Employers = () => {
   responsive
   customStyles={customStyles}
   paginationPerPage={10} 
-  paginationRowsPerPageOptions={[5, 10, 20, 50, 100, `Total ${filteredRecruiters.length}`]}
+  paginationRowsPerPageOptions={[5, 10, 20, 50, 100]}
+
+  paginationComponentOptions={{
+    rowsPerPageText: `Rows per page (Total ${ filteredRecruiters.length})`,
+    rangeSeparatorText: "of", 
+    selectAllRowsItem: true,
+    selectAllRowsItemText: "All",
+
+  }}
 />
 
       )}
