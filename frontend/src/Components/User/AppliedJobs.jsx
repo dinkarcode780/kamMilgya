@@ -313,6 +313,7 @@ const AppliedJobs = () => {
     },
   ];
 
+  
   return (
     <div className="bg-white p-6 rounded-md shadow max-w-7xl mx-auto mt-4 mb-10">
       <h2 className="text-3xl font-bold text-blue-700 mb-6 text-center">
