@@ -33,7 +33,7 @@ const menuItems = [
   { name: "Applications", icon: <FaUserTie />, path: "/employer-dash/applications" },
   { name: "Company Profile", icon: <FaBuilding />, path: "/employer-dash/company-profile" },
   // ✅ Corrected:
-  { name: "Applied Users", icon: <FaCog />, path: `/employer-dash/settings/${jobId || ""}` },
+  // { name: "Applied Users", icon: <FaCog />, path: `/employer-dash/settings/${jobId || ""}` },
 ];
 
  const logoutHandler = (e) => {
@@ -51,7 +51,12 @@ const menuItems = [
   return (
     <>
       {/* Mobile Toggle Button */}
-      <div className="md:hidden p-4 bg-white shadow flex justify-between fixed w-full z-20">
+      <div
+      
+
+      className="md:hidden p-4 bg-white shadow flex justify-between fixed w-full z-20"
+      
+      >
         <button onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
         </button>
@@ -72,7 +77,7 @@ const menuItems = [
       
         className={`${
           isOpen ? "block" : "hidden"
-        } md:block w-64 bg-white shadow-lg h-screen fixed top-0 left-0 z-10 overflow-y-auto`}
+        } md:block w-64 bg-white shadow-lg h-screen fixed top-0 left-0 z-10 overflow-y-auto pt-10 md:pt-0`}
       >
         <div className="p-4 text-xl font-bold text-center border-b">Employer</div>
         <nav className="p-4">

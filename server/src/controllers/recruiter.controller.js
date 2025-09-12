@@ -241,6 +241,7 @@ export const countActiveRecruiters = async (_, res, next) => {
 
 export const updateRecruiterProfile = async (req, res) => {
   const allowed = [
+    "name",
     "companyName",
     "industry",
     "website",

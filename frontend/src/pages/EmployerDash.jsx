@@ -13,12 +13,12 @@ const EmployerDash = () => {
 
   
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex  h-screen overflow-hidden">
       {/* Sidebar (Fixed Width) */}
       <Sidebar />
 
       {/* Main Content Area */}
-      <div className="flex-1 md:ml-64 p-4 mt-10 overflow-y-auto h-full bg-gray-100">
+      <div className="flex-1 md:ml-64 p-4 mt-10 overflow-y-hidden h-full bg-gray-100">
         <Routes>
           <Route path="/*" element={<DashboardHome />} />
           <Route path="/post-job" element={<PostJobPage />} />

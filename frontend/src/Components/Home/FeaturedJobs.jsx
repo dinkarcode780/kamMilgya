@@ -1,5 +1,4 @@
 
-
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -31,6 +30,7 @@ const FeaturedJobs = () => {
   const handleCallNow = (id, e) => {
     e.stopPropagation();
     const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
 
     if (token) {
       dispatch(applyJob(id))
@@ -39,7 +39,27 @@ const FeaturedJobs = () => {
           alert('✅ Applied Successfully');
           setAppliedJobs((prev) => [...prev, id]);
         })
-        .catch((err) => alert('❌ Apply Failed: ' + err.message));
+        // .catch((err) => alert("Your are admin so you can't apply for this job",err));
+         .catch((err) => {
+        console.log("Apply Job Error:", err);
+
+        // 🔹 Role-based alerts
+        if (user?.role === "admin") {
+          alert("❌ Admins cannot apply for jobs.");
+        } else if (user?.role === "recruiter") {
+          alert("❌ Recruiters cannot apply for jobs.");
+        } else {
+          // Handle backend error messages
+          const errorMsg =
+            err?.error ||               // backend directly sent object {error:"..."}
+            err?.response?.data?.error ||
+            err?.response?.data?.message ||
+            err?.message ||
+            "Unknown error";
+
+          alert(errorMsg);
+        }
+      });
     } else {
       setSid(id);
       setIsOpen(true);

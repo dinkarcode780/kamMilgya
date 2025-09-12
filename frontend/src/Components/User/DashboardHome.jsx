@@ -8,6 +8,7 @@ import {
 
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAppliedJobs } from "../../app/job/thunak";
+import { useNavigate } from "react-router-dom";
 
 // import { fetchAppliedJobs } from "../../app/job/thunak"
 
@@ -30,6 +31,8 @@ const appliedJobsCount = appliedJobs?.length || 0;
 
 const savedJobsCount = user?.savedJobs?.length || 0;
 
+const navigate = useNavigate();
+
 
      useEffect(() => {
     dispatch(fetchAppliedJobs());
@@ -40,7 +43,7 @@ const savedJobsCount = user?.savedJobs?.length || 0;
     // const notificationsCount = useSelector((state) => state.notifications.count);       
 
   return (
-    <div className="p-4 md:p-6 bg-gray-100 min-h-screen">
+    <div className="p-4 md:p-6 min-h-screen">
       {/* Welcome Section */}
       <div className="bg-white p-6 rounded shadow mb-6">
         <h1 className="text-2xl font-bold text-blue-700">
@@ -52,11 +55,21 @@ const savedJobsCount = user?.savedJobs?.length || 0;
       </div>
 
       {/* Stats Grid */}
-      <div className="grid gap-6 md:grid-cols-3 sm:grid-cols-2">
+      <div
+      
+        onClick={()=>navigate("/user-dash/applied-jobs")}
+      
+      className="grid gap-6 md:grid-cols-3 sm:grid-cols-2 cursor-pointer">
         {/* Applied Jobs */}
         <div className="bg-white rounded-lg shadow p-5 flex items-center gap-4 hover:shadow-lg transition">
           <FaBriefcase className="text-blue-600 text-3xl" />
-          <div>
+          <div
+          
+          // onClick={()=>navigate("/user-dash/applied-jobs")}
+          // onClick={()=>("/user-dash/applied-jobs")}
+          className="cursor-pointer"
+          
+          >
             <p className="text-gray-600">Applied Jobs</p>
             <h3 className="text-xl font-bold text-gray-800">{appliedJobsCount}</h3>
           </div>

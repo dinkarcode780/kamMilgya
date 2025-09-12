@@ -13,6 +13,8 @@ const jobSchema = new mongoose.Schema(
     description:  { type: String},
     category:     { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
     subCategory:  String,
+    // subCategory: { type: mongoose.Schema.Types.ObjectId, ref: "SubCategory" },
+
     salaryMin:    Number,
     salaryMax:    Number,
     skills:       [String],

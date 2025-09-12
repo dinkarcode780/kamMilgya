@@ -229,6 +229,8 @@ const JobDetail = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { allJobs: jobs, loading, error } = useSelector((state) => state.job);
+
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
   
   // Application state
   const [isOpen, setIsOpen] = useState(false);
@@ -251,13 +253,43 @@ const JobDetail = () => {
     const token = localStorage.getItem('token');
     
     if (token) {
+  
+       if (user?.role === "admin") {
+      alert("Admin can't apply job");
+      return;
+    }
+    if (user?.role === "recruiter") {
+      alert("Recruiter can't apply job");
+      return;
+    }
+
+
       dispatch(applyJob(id))
         .unwrap()
         .then(() => {
           alert('✅ Applied Successfully');
           setAppliedJobs((prev) => [...prev, id]);
         })
-        .catch((err) => alert('❌ Apply Failed: ' + err.message));
+        .catch((err) => {
+           console.log("Full error ===>", err);
+          const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  if (user?.role === "admin") {
+    alert("❌ Admin can't apply job");
+  } else if (user?.role === "recruiter") {
+    alert("❌ Recruiter can't apply job");
+  } else {
+     let errorMsg =
+      err?.error ||                 // 👈 direct error object
+      err?.response?.data?.error || 
+      err?.response?.data?.message ||
+      err?.message ||
+      "Unknown error";
+
+    alert(errorMsg);
+    // alert("⚠️ Something went wrong: " + (err?.message || err));
+  }
+        });
     } else {
       setIsOpen(true);
     }
@@ -279,7 +311,7 @@ const JobDetail = () => {
       // Apply to job after login
       handleApply(e);
     } catch (err) {
-      alert('❌ Login Failed');
+      alert('Login Failed');
       console.log(err);
     }
   };
@@ -307,8 +339,8 @@ const JobDetail = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <Link to="/jobs" className="flex items-center text-blue-600 mb-6">
-        <FaArrowLeft className="mr-2" /> Back to Jobs
+      <Link to="/" className="flex items-center text-blue-600 mb-6">
+        <FaArrowLeft className="mr-2" /> Back to Home
       </Link>
 
       <div className="bg-white rounded-xl shadow-md overflow-hidden">
@@ -365,6 +397,33 @@ const JobDetail = () => {
                   </p>
                 </div>
               </div>
+
+               {/* Phone (optional) */}
+      {job.phone && (
+        <div className="flex items-start">
+          <FaPhone className="text-blue-500 mt-1 mr-3" />
+          <div>
+            <h3 className="font-semibold text-gray-700">Phone</h3>
+            <a href={`tel:${job.phone}`} className="text-blue-600 hover:underline">
+              {job.phone}
+            </a>
+          </div>
+        </div>
+      )}
+
+   {/* Website (optional) */}
+      {job.website && (
+        <div className="flex items-start">
+          <FaBriefcase className="text-blue-500 mt-1 mr-3" />
+          <div>
+            <h3 className="font-semibold text-gray-700">Website</h3>
+            <a href={job.website} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">
+              {job.website}
+            </a>
+          </div>
+        </div>
+      )}
+
             </div>
 
             <div className="space-y-4">
@@ -431,23 +490,23 @@ const JobDetail = () => {
           )}
 
           {/* Apply Button */}
-          <div className="flex justify-center mt-8">
-            {appliedJobs.includes(job._id) ? (
-              <a
-                href={`tel:${job.phone}`}
-                className="flex items-center justify-center bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200"
-              >
-                <FaPhone className="mr-2" /> {job.phone || "Call Now"}
-              </a>
-            ) : (
-              <button
-                onClick={handleApply}
-                className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 w-full md:w-auto"
-              >
-                Apply Now
-              </button>
-            )}
-          </div>
+            <div className="flex justify-center mt-8">
+              {appliedJobs.includes(job._id) ? (
+                <a
+                  href={`tel:${job.phone}`}
+                  className="flex items-center justify-center bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200"
+                >
+                  <FaPhone className="mr-2" /> {job.phone || "Call Now"}
+                </a>
+              ) : (
+                <button
+                  onClick={handleApply}
+                  className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 w-full md:w-auto"
+                >
+                  Apply Now
+                </button>
+              )}
+            </div>
         </div>
       </div>
 

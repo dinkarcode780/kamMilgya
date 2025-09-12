@@ -76,7 +76,7 @@ const error = jobState.error;
           alert("⚠️ You have already applied to this job");
           setAppliedJobs((prev) => [...prev, id]);
         } else {
-          alert('❌ Apply Failed: ' + (err.message || err.error || "Unknown error"));
+          alert('Apply Failed: ' + (err.message || err.error || "Unknown error"));
         }
       });
   } else {
@@ -109,7 +109,7 @@ const error = jobState.error;
         handleCallNow(sid);
       }
     } catch (err) {
-      alert('❌ Login Failed');
+      alert('Login Failed');
       console.log(err);
     }
   };
@@ -220,8 +220,16 @@ const error = jobState.error;
               </div>
             ) : (
               <button
-                onClick={() => handleCallNow(job._id)}
-                className="w-full border-2 border-[#0077B6] text-[#0077B6] hover:bg-[#0077B6] hover:text-white text-sm py-2 rounded-lg transition duration-200"
+
+                // onClick={() => handleCallNow(job._id)}
+                 onClick={() => {
+    if (job?.phone) {
+      window.location.href = `tel:${job.phone}`;
+    } else {
+      alert("Phone number not available");
+    }
+  }}
+                className="w-full border-2 border-[#0077B6] text-[#0077B6] hover:bg-[#0077B6] hover:text-white text-sm py-2 rounded-lg transition duration-200 cursor-pointer"
               >
                 Call Now
               </button>

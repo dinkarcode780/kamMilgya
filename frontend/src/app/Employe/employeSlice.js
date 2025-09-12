@@ -45,6 +45,11 @@ const employeeSlice = createSlice({
   localStorage.setItem("token", action.payload.token);
   state.error = null;
 })
+.addCase(employeRegister.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+        //  state.error = action.payload?.message || action.payload || "Registration failed";
+      })
 
 
 
@@ -62,13 +67,8 @@ const employeeSlice = createSlice({
       .addCase(updateRecruiterProfile.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || "Update failed";
-      })
-
-      .addCase(employeRegister.rejected, (state, action) => {
-        state.isLoading = false;
-        // state.error = action.payload;
-         state.error = action.payload?.message || action.payload || "Registration failed";
       });
+
         builder
       .addCase(employeSendOtp.pending, (state) => {
         state.isLoading = true;

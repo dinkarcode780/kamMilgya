@@ -5,6 +5,7 @@ import {  fetchMyPostedJobs } from "../../app/job/thunak";
 import { fetchAdminUsers } from "../../app/admin/adminThunk";
 import {useNavigate} from "react-router-dom"
 
+
 const DashboardHome = () => {
 
    const dispatch = useDispatch();
@@ -18,6 +19,11 @@ const DashboardHome = () => {
   //  const { postedJobs, appliedJobs, loading } = useSelector((state) => state.job);
     const { postedJobs } = useSelector((state) => state.job);
   const { users } = useSelector((state) => state.admin);
+    const { employwer} = useSelector((state) => state.admin);
+
+    console.log(employwer,);
+    
+
 
 
   // const appliedJobs = useSelector((state) => state.job.appliedJobs); // from job slice
@@ -36,7 +42,8 @@ const DashboardHome = () => {
   }, [dispatch]);
 
   return (
-    <div className="min-h-screen p-4 bg-gray-100">
+  
+    <div className="min-h-screen  p-4 bg-gray-100">
       {/* Greeting */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-800">Welcome Back 👋</h1>

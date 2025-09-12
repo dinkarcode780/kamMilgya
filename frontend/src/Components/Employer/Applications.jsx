@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import axiosInstance from "../../config/axios";
 import { fetchAdminUsers } from "../../app/admin/adminThunk";
+import DataTable from "react-data-table-component";
+import { FaSearch } from "react-icons/fa";
 
 import {
   createPhoneViewOrderThunk,
@@ -21,11 +23,14 @@ const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY;
   const { id: jobId } = useParams(); // Job ID from URL
   const [showPopup, setShowPopup] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { users, loading, error } = useSelector((state) => state.admin);
 
+  
   console.log(jobId, "Job ID from URL");
   
+  console.log("hii",fetchAdminUsers)
 
   useEffect(() => {
     dispatch(fetchAdminUsers());
@@ -125,57 +130,101 @@ const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY;
     }
   };
 
+  // Search filter for applicants
+  const filteredApplicants = (users || []).filter((applicant) => {
+    const term = searchTerm.toLowerCase();
+    return (
+      applicant?.name?.toString().toLowerCase().includes(term) ||
+      applicant?.Skill?.toString().toLowerCase().includes(term) ||
+      applicant?.status?.toString().toLowerCase().includes(term) ||
+      applicant?.email?.toString().toLowerCase().includes(term)
+    );
+  });
+
+
+  const columns = [
+    {
+      name: "S/N",
+      width: "70px",
+      center: true,
+      cell: (row, index) => index + 1,
+    },
+    {
+      name: "Applicant Name",
+      selector: (row) => row?.name || "Unknown",
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: "Skill",
+      selector: (row) => row?.Skill || "N/A",
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: "Status",
+      selector: (row) => row?.status || "Pending",
+      sortable: true,
+    },
+    {
+      name: "Actions",
+      cell: (row) => (
+        <button
+          onClick={() => viewHandler(row?._id)}
+          className="px-3 py-1 mt-2 bg-green-500 text-white text-xs rounded hover:bg-green-600"
+        >
+          View Detail
+        </button>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+    },
+  ];
+
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
+    <div 
+    
+    className="p-6 bg-gray-100 max-h-[500px] overflow-y-auto pr-2 scrollbar-hide  "
+    // className="p-6 h-scree overflow-y-scroll"
+
+    
+    >
       <h1 className="text-3xl font-bold mb-6 text-gray-800">Job Applications</h1>
+
+      {/* Search Bar */}
+      <div className="mb-4 relative max-w-md">
+        <FaSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search applicants..."
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+      </div>
 
       {loading ? (
         <p className="text-blue-600">Loading applications...</p>
       ) : error ? (
         <p className="text-red-600">Error: {error}</p>
       ) : (
-        <div className="overflow-x-auto bg-white shadow rounded-lg">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-blue-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                  Applicant Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                  Skill
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 text-sm">
-              {users?.map((applicant) => (
-                <tr key={applicant._id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 font-medium text-gray-900">
-                    {applicant?.name || "Unknown"}
-                  </td>
-                  <td className="px-6 py-4 text-gray-700">
-                    {applicant?.Skill || "N/A"}
-                  </td>
-                  <td className="px-6 py-4 text-gray-700">
-                    {applicant.status || "Pending"}
-                  </td>
-                  <td className="px-6 py-4">
-                    <button
-                      onClick={() => viewHandler(applicant?._id)}
-                      className="px-3 py-1 mt-2 bg-green-500 text-white text-xs rounded hover:bg-green-600"
-                    >
-                      View Detail
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="bg-white shadow rounded-lg">
+          <DataTable
+            columns={columns}
+            data={filteredApplicants}
+            pagination
+            highlightOnHover
+            striped
+            responsive
+            noDataComponent={
+              searchTerm
+                ? `No applicants found matching "${searchTerm}"`
+                : "No applicants found"
+            }
+             paginationPerPage={10} 
+  paginationRowsPerPageOptions={[5, 10, 20, 50, 100, `Total ${filteredApplicants.length}`]}
+          />
         </div>
       )}
 

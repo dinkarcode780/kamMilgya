@@ -1,7 +1,7 @@
 
 
 
-  import { useState } from "react";
+  import { useEffect, useRef, useState } from "react";
 import {
   FaHome,
   FaUserTie,
@@ -25,6 +25,8 @@ import { logoutUser } from "../../app/auth/authThunks";
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
+
+   const menuRef = useRef(null);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -94,8 +96,22 @@ const Navbar = () => {
     setMobileMenuOpen(false);
   };
 
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        closeMenus();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <nav className="bg-white shadow-lg py-3 sticky top-0 z-50">
+    <nav ref={menuRef} className="bg-white shadow-lg py-3 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between md:h-14 h-10">
           {/* Logo */}

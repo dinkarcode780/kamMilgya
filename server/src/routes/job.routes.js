@@ -31,7 +31,7 @@ const recruiterOnly = (req, res, next) => {
 const userOnly = (req, res, next) =>
   req.account?.constructor.modelName === "User"
     ? next()
-    : res.status(403).json({ error: "User access required" });
+    : res.status(403).json({ error: "You cannot apply as you are on the recruiter page" });
 
 /* ---------------- PUBLIC ---------------- */
 router.get("/", getJobs);

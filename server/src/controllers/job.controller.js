@@ -6,17 +6,46 @@ import User from "../models/User.js";
 /* =========================================================
    Helpers
 ========================================================= */
+// const assertRecruiter = (req) => {
+//   if (!(req.role === "recruiter" || req.role === "admin")) {
+//     const err = new Error("Recruiter access required");
+//     err.status = 403;
+//     throw err;
+//   }
+// };
+
+// const assertUser = (req) => {
+//   if (req.role !== "user") {
+//     const err = new Error("Admins are not allowed to apply for jobs");
+//     err.status = 403;
+//     throw err;
+//   }
+// };
+
+
 const assertRecruiter = (req) => {
   if (!(req.role === "recruiter" || req.role === "admin")) {
-    const err = new Error("Recruiter access required");
+    const err = new Error("First Login");
     err.status = 403;
     throw err;
   }
 };
 
 const assertUser = (req) => {
+  if (req.role === "admin") {
+    const err = new Error("You are Admin you can't to apply for this jobs");
+    err.status = 403;
+    throw err;
+  }
+
+  if (req.role === "recruiter") {
+    const err = new Error("You cannot apply as you are on the recruiter page");
+    err.status = 403;
+    throw err;
+  }
+
   if (req.role !== "user") {
-    const err = new Error("User access required");
+    const err = new Error("Please login or register first to apply for jobs");
     err.status = 403;
     throw err;
   }
@@ -230,9 +259,9 @@ export const applyJob = async (req, res, next) => {
 
     const job = await Job.findById(req.params.id);
     if (!job || !job.isActive)
-      return res.status(404).json({ error: "Job unavailable" });
+      return res.status(404).json({ error: "Job is now inactive" });
     if (job.jobpost <= 0)
-      return res.status(410).json({ error: "Job quota exhausted" });
+      return res.status(410).json({ error: "Job quota is full" });
 
     const exists = await Application.findOne({
       job: req.params.id,

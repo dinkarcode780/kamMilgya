@@ -8,7 +8,7 @@ import {
   deleteSubCategory,
 } from '../../app/subcategories/subcategoryThunk';
 
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaSearch, FaTrash } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import DataTable from 'react-data-table-component';
 
@@ -20,6 +20,7 @@ const SubCategory = () => {
   const [categoryId, setCategoryId] = useState('');
   const [subName, setSubName] = useState('');
   const [editData, setEditData] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   // 🟢 Load all categories on mount
   useEffect(() => {
@@ -81,7 +82,8 @@ const SubCategory = () => {
   const handleEdit = (sub) => {
     setEditData(sub);
     setSubName(sub.name);
-    setCategoryId(sub.categoryId); // ✅ Auto-select parent category
+    // setCategoryId(sub.categoryId); // ✅ Auto-select parent category
+      setCategoryId(sub.category?._id || sub.category); 
   };
 
   const handleDelete = (id) => {
@@ -96,17 +98,68 @@ const SubCategory = () => {
     }
   };
 
-  const columns = [
-  { name: 'Subcategory Name', selector: (row) => row.name },
+  // Filter subcategories based on search term
+  const filteredSubcategories = subcategories.filter(sub => 
+    sub.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (categories.find(c => c._id === sub.category)?.name || '').toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+//   const columns = [
+//   { 
+//     name: 'S/N', 
+//     cell: (row, index) => index + 1, 
+//     width: '60px', 
+//     center: true 
+//   },
+//   { name: 'Subcategory Name', selector: (row) => row.name },
+//   {
+//     name: 'Parent Category',
+//     selector: (row) => {
+//       const cat = categories.find((c) => c._id === row.category); // 'category' is just an ID
+//       return cat ? cat.name : 'Unknown';
+//     },
+//   },
+//   {
+//     name: 'Actions',
+//     cell: (row) => (
+//       <div className="flex gap-2">
+//         <button
+//           onClick={() => handleEdit(row)}
+//           className="p-2 bg-blue-500 text-white rounded"
+//         >
+//           <FaEdit />
+//         </button>
+//         <button
+//           onClick={() => handleDelete(row._id)}
+//           className="p-2 bg-red-500 text-white rounded"
+//         >
+//           <FaTrash />
+//         </button>
+//       </div>
+//     ),
+//   },
+// ];
+
+const columns = [
+  { 
+    name: "S/N", 
+    cell: (row, index) => index + 1, 
+    width: "70px", 
+    center: true 
+  },
+  { name: "Subcategory Name", selector: (row) => row.name, sortable: true },
   {
-    name: 'Parent Category',
+    name: "Parent Category",
     selector: (row) => {
-      const cat = categories.find((c) => c._id === row.category); // 'category' is just an ID
-      return cat ? cat.name : 'Unknown';
+      // const cat = categories.find((c) => c._id === row.category);
+      // return cat ? cat.name : "Unknown";
+      const cat = categories.find((c) => c._id === (row.category?._id || row.category));
+return cat ? cat.name : (row.category?.name || "Unknown");
+
     },
   },
   {
-    name: 'Actions',
+    name: "Actions",
     cell: (row) => (
       <div className="flex gap-2">
         <button
@@ -130,6 +183,19 @@ const SubCategory = () => {
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-4">Subcategory Management</h2>
+      
+      {/* Search Bar */}
+      <div className="mb-4 relative">
+         <FaSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+        <input
+          type="text"
+          placeholder="Search subcategories by name or parent category..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+      </div>
+
       <form onSubmit={handleSubmit} className="mb-6 bg-white p-4 shadow rounded">
         {/* Category Dropdown */}
         <select
@@ -175,11 +241,14 @@ const SubCategory = () => {
 
       <DataTable
         columns={columns}
-        data={subcategories}
+        data={filteredSubcategories}
         progressPending={loading}
         pagination
         highlightOnHover
         responsive
+        noDataComponent={
+          searchTerm ? `No subcategories found matching "${searchTerm}"` : "No subcategories found"
+        }
       />
     </div>
   );

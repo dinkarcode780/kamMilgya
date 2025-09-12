@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchMyPostedJobs, deleteJob, updateJob } from "../../app/job/thunak";
 import { fetchCategories } from "../../app/categories/categorythunk";
 import { fetchSubcategories } from "../../app/subcategories/subcategoryThunk";
+import DataTable from "react-data-table-component";
+import { FaSearch } from "react-icons/fa";
 
 const ManageJobs = () => {
   const dispatch = useDispatch();
@@ -17,6 +19,9 @@ const { subcategories } = useSelector((state) => state.subcategories);
 
   const [showModal, setShowModal] = useState(false);
   const [editingJob, setEditingJob] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [pageSize, setPageSize] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
   useEffect(() => {
   dispatch(fetchCategories());
 }, [dispatch]);
@@ -65,12 +70,12 @@ useEffect(() => {
   setEditingJob({
     ...job,
     category: job.category?._id ? job.category : { _id: job.category }, 
-    subcategory: job.subcategory?._id ? job.subcategory : { _id: job.subcategory }
+    // subcategory: job.subcategory?._id ? job.subcategory : { _id: job.subcategory }
   });
 
   // Agar category hai to uske subcategories load kar lo
   if (job.category?._id) {
-    dispatch(fetchSubcategories(job.category._id));
+    // dispatch(fetchSubcategories(job.category._id));
   }
   // setIsModalOpen(true);
   setShowModal(true);
@@ -107,17 +112,70 @@ useEffect(() => {
 };
 
 
+  // Filter and paginate jobs
+  const filteredJobs = useMemo(() => {
+    const term = searchTerm.toLowerCase();
+    const base = (postedJobs || []).filter((job) =>
+      (
+        job?.title?.toString().toLowerCase().includes(term) ||
+        job?.company?.toString().toLowerCase().includes(term) ||
+        job?.location?.toString().toLowerCase().includes(term) ||
+        job?.type?.toString().toLowerCase().includes(term) ||
+        job?.status?.toString().toLowerCase().includes(term)
+      )
+    );
+    return base;
+  }, [postedJobs, searchTerm]);
+
+  const pagedJobs = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    const end = start + pageSize;
+    return filteredJobs.slice(start, end);
+  }, [filteredJobs, currentPage, pageSize]);
+
+  useEffect(() => {
+    // reset to first page when filters change
+    setCurrentPage(1);
+  }, [searchTerm, pageSize]);
+
   return (
     <div className="p-6 mb-8 bg-gray-100 min-h-screen">
       <h1 className="text-3xl font-bold mb-6 text-gray-800">Manage Jobs</h1>
+
+      {/* Search + Page size controls */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+        <div className="relative max-w-md w-full">
+          <FaSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search jobs by title, company, location, type, status..."
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-600">Rows per page:</span>
+          <select
+            className="border px-2 py-1 rounded"
+            value={pageSize}
+            onChange={(e) => setPageSize(Number(e.target.value))}
+          >
+            <option value={5}>5</option>
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={50}>50</option>
+          </select>
+        </div>
+      </div>
 
       {loading ? (
         <p>Loading...</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {postedJobs?.map((job, index) => (
+          {pagedJobs?.map((job, index) => (
             <div
-              key={index}
+              key={job._id || index}
               className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition duration-300"
             >
               <div className="flex justify-between items-center mb-2">
@@ -151,9 +209,7 @@ useEffect(() => {
                 <button
                   
                   // onClick={() => navigate(`/settings/${job._id}`)}
-            onClick={() => navigate(`/jobdetails/${job._id}`, { replace: false })}
-
-
+            onClick={() => navigate(`/jobs/${job._id}`, { replace: false })}
 
                  
                   className="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -180,12 +236,55 @@ useEffect(() => {
         </div>
       )}
 
+      {/* Pagination */}
+      {filteredJobs.length > 0 && (
+        <div className="flex items-center justify-between mt-6">
+          <div className="text-sm text-gray-600">
+            Page {currentPage} of {Math.max(1, Math.ceil(filteredJobs.length / pageSize))}
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              className="px-3 py-1 border rounded disabled:opacity-50"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            >
+              Prev
+            </button>
+            {Array.from({ length: Math.ceil(filteredJobs.length / pageSize) }, (_, i) => i + 1)
+              .slice(
+                Math.max(0, currentPage - 3),
+                Math.max(0, currentPage - 3) + 5
+              )
+              .map((page) => (
+                <button
+                  key={page}
+                  className={`px-3 py-1 border rounded ${
+                    page === currentPage ? "bg-blue-600 text-white" : ""
+                  }`}
+                  onClick={() => setCurrentPage(page)}
+                >
+                  {page}
+                </button>
+              ))}
+            <button
+              className="px-3 py-1 border rounded disabled:opacity-50"
+              disabled={currentPage >= Math.ceil(filteredJobs.length / pageSize)}
+              onClick={() =>
+                setCurrentPage((p) => Math.min(Math.ceil(filteredJobs.length / pageSize), p + 1))
+              }
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
+
      
 
       {/* 📝 Edit Modal */}
 {showModal && editingJob && (
   <div className="fixed inset-0 backdrop-blur bg-opacity-50 flex items-center justify-center z-50">
-    <div className="bg-white p-6 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+    <div className="bg-white p-6 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto scrollbar-hide">
       <h2 className="text-xl font-semibold mb-4 text-gray-800">Edit Job</h2>
 
       {/* Title & Job Post */}
@@ -250,7 +349,7 @@ useEffect(() => {
   onChange={(e) => {
     const selectedCategoryId = e.target.value;
     setEditingJob((prev) => ({ ...prev, category: { _id: selectedCategoryId }, subcategory: "" }));
-    dispatch(fetchSubcategories(selectedCategoryId));
+    // dispatch(fetchSubcategories(selectedCategoryId));
   }}
 >
   <option value="">Select Category</option>
@@ -262,8 +361,8 @@ useEffect(() => {
 </select>
 
 {/* Subcategory Dropdown */}
-<label className="block mb-2 text-sm font-medium">Subcategory</label>
-<select
+{/* <label className="block mb-2 text-sm font-medium">Subcategory</label> */}
+{/* <select
   name="subcategory"
   value={editingJob.subcategory?._id || ""}
   onChange={(e) =>
@@ -283,7 +382,7 @@ useEffect(() => {
       {sub.name}
     </option>
   ))}
-</select>
+</select> */}
 
 
 

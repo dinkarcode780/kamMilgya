@@ -34,6 +34,9 @@ import RefundPolicy from "./pages/RefundPolicy";
 import JobDetails from "./Components/Employer/JobDetails";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Employers from "./Components/admin/Employers";
+import Candidates from "./Components/admin/Candidates";
+import JobPosts from "./Components/admin/JobPosts";
 // import Employers from "./Components/admin/Employers";
 // Add more pages as needed
 
@@ -92,9 +95,16 @@ const App = () => {
             </Route>  */}
            <Route path="/employer-dash/*" element={<EmployerDash />} />
              <Route path="/post-job" element={<PostJobPage />} /> 
+            
 
               {/* Employers page */}
-  {/* <Route path="/admin/recruiters" element={<Employers />} /> */}
+           <Route path="/total-employers" element={<Employers />} />
+
+           <Route path="/total-canditates" element={<Candidates />} />
+
+           <Route path="/total-activejob" element={<JobPosts />} />
+
+
 
             <Route element={<ProtectedRoute allowedRoles={["user"]} />}>
               <Route path="/user-dash/*" element={<UserDash />} />

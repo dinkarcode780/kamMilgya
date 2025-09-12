@@ -258,8 +258,13 @@ const user = updatedUser || authUser;
               }
             />
             <Input label="Address" name="address" value={formData.address} onChange={handleChange} />
+
+               {/* <Input label="Two-Wheeler" name="vehicle" value={formData.vehicle} onChange={handleChange} /> */}
              
              <div>
+
+              {/* <Detail label="Have Two-Wheeler" value={user.vehicle ? "Yes" : "No"} />
+            <Detail label="Have Driving License" value={user.license ? "Yes" : "No"} /> */}
               <label className="block font-medium text-sm text-gray-600 mb-1">
                 Profile Image
               </label>

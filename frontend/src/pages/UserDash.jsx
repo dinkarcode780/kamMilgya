@@ -20,7 +20,7 @@ const UserDash = () => {
       <Sidebar />
 
       {/* Scrollable Main Content Area */}
-      <div className="flex-1 overflow-y-auto md:ml-64 p-4 mt-14 md:mt-0 h-full">
+      <div className="flex-1 overflow-y-auto md:ml-64 p-4 mt-14 md:mt-0 h-full scrollbar-hide">
         <Routes>
           <Route path="/*" element={<DashboardHome />} />
           <Route path="/profile" element={<Profile />} />

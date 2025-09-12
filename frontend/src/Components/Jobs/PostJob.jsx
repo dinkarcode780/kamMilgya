@@ -133,11 +133,19 @@ const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY;
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12 bg-white shadow-xl rounded-xl mt-10 mb-10">
+    <div
+    
+    className="max-w-4xl mx-auto px-4 py-12 bg-white shadow-xl rounded-xl mt-10 mb-10 h-[80vh] flex flex-col  overflow-y-auto scrollbar-hide "
+    // className="max-w-4xl mx-auto px-4 py-12 bg-white shadow-xl rounded-xl mt-10 mb-10"
+    
+    
+    
+    >
       <h2 className="text-3xl font-bold text-center text-[#0077B6] mb-8">
         Post a New Job
       </h2>
-      <form onSubmit={handleSubmit} className="space-y-6">
+  <div className="flex-1  pr-2 ">
+      <form onSubmit={handleSubmit} className="space-y-6 ">
         {/* Job Title & Post Count */}
         <div className="grid md:grid-cols-2 gap-6">
           <div>
@@ -192,9 +200,9 @@ const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY;
             </select>
           </div>
           <div>
-            <label className="block text-sm font-semibold text-gray-700">
+            {/* <label className="block text-sm font-semibold text-gray-700">
               Subcategory
-            </label>
+            </label> */}
             {/* <select
               name="subcategory"
               value={formData.subcategory}
@@ -210,7 +218,7 @@ const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY;
               ))}
             </select> */}
 
-            <select
+            {/* <select
   name="subcategory"
   value={formData.subcategory}
   onChange={handleChange}
@@ -222,7 +230,7 @@ const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY;
       {sub.name}
     </option>
   ))}
-</select>
+</select> */}
 
           </div>
         </div>
@@ -313,6 +321,9 @@ const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY;
               onChange={handleChange}
               className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2"
               placeholder="e.g., +1234567890"
+              maxLength={10} // ✅ max 10 characters
+  pattern="\d{10}" // ✅ exactly 10 digits
+  title="Phone number must be exactly 10 digits"
               required
             />
           </div>
@@ -409,6 +420,7 @@ const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY;
           </button>
         </div>
       </form>
+    </div>
     </div>
   );
 };

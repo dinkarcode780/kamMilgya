@@ -20,14 +20,6 @@ const app = express();
 
 
 
-// app.use(cors({
-//   origin: ['https://jobmilgayi.netlify.app', 'http://localhost:5173'], // update with your frontend URL if needed
-
-//   credentials: true,
-//    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-
-// }));
-
 app.use(cors({
   origin: ['https://jobmilgayi.netlify.app', 'http://localhost:5173'], // update with your frontend URL if needed
 
@@ -35,6 +27,8 @@ app.use(cors({
    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 
 }));
+
+
 
 app.use(cookieParser());
 app.use(express.json());

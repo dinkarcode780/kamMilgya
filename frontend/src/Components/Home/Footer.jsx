@@ -107,8 +107,8 @@ const handleProfileClick = () => {
               <ul className="space-y-2 text-sm text-gray-300">
                 {/* <li><a href="#" className="hover:text-white">Browse Candidates</a></li> */}
                 {/* <li><a href="#" className="hover:text-white">Dashboard</a></li> */}
-                <li><a href="/employeLogin" className="hover:text-white">Employe Login</a></li>
-                <li><a href="/employerRegister" className="hover:text-white">Employe Register</a></li>
+                <li><a href="/employeLogin" className="hover:text-white">Employee Login</a></li>
+                <li><a href="/employerRegister" className="hover:text-white">Employee Register</a></li>
               </ul>
             </div>
 

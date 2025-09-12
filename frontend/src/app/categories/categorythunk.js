@@ -10,7 +10,7 @@ export const fetchCategories = createAsyncThunk(
       const response = await axios.get(API_URL);
       const normalizedData = response.data.map((cat) => ({
         ...cat,
-        subcategories: Array.isArray(cat.subcategories) ? cat.subcategories : [], // Default empty array
+        subcategories: Array.isArray(cat.subcategories) ? cat.subcategories : [], 
       }));
       return normalizedData;
     } catch (error) {
@@ -32,25 +32,39 @@ export const fetchCategoryById = createAsyncThunk(
   }
 );
 
+// export const createCategory = createAsyncThunk(
+//   'categories/create',
+//   async (data, thunkAPI) => {
+//     try {
+//       const response = await axios.post(`${API_URL}/`, data, {
+//         headers: {
+//           'Content-Type': 'multipart/form-data',
+//         },
+//       });
+
+//       console.log(response, "Category created successfully"); // ✅ Yeh ab sahi jagah pe hai
+
+//       return response.data;
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue(error.response?.data || 'Something went wrong');
+//     }
+//   }
+// );
+
 export const createCategory = createAsyncThunk(
   'categories/create',
-  async (data, thunkAPI) => {
+  async (formData, thunkAPI) => {
     try {
-      const response = await axios.post(`${API_URL}/`, data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+      const response = await axios.post(API_URL, formData, {
+        headers: { "Content-Type": "multipart/form-data" }
       });
-
-      console.log(response, "Category created successfully"); // ✅ Yeh ab sahi jagah pe hai
-
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || 'Something went wrong');
+      // ✅ Backend ka error safe return karo
+      return thunkAPI.rejectWithValue(error.response?.data?.error || "Something went wrong");
     }
   }
 );
-
 
 
   export const updateCategory = createAsyncThunk(
@@ -88,6 +102,7 @@ export const deleteCategory = createAsyncThunk(
   }
 );
 
+
 export const fetchJobsByCategoryName = createAsyncThunk(
   'categories/fetchJobsByCategoryName',
   async (categoryName, thunkAPI) => {
@@ -100,8 +115,13 @@ export const fetchJobsByCategoryName = createAsyncThunk(
       return response.data;   
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || 'Something went wrong');
+      // const message = error.response?.data?.message || error.response?.data || error.message || 'Something went wrong';
+      // return thunkAPI.rejectWithValue(message);
     }
   }
 );
+
+
+
 
 

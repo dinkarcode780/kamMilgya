@@ -32,22 +32,78 @@ const CategoryJobsPage = () => {
   }, [dispatch, categoryName]);
 
   // ✅ Updated Call Now Logic
-  const handleCallNow = (id) => {
-    const token = localStorage.getItem("token");
+  // const handleCallNow = (id) => {
+  //   const token = localStorage.getItem("token");
+    
 
-    if (token) {
-      dispatch(applyJob(id))
-        .unwrap()
-        .then(() => {
+  //   if (token) {
+  //     dispatch(applyJob(id))
+  //       .unwrap()
+  //       .then(() => {
+  //         alert("✅ Applied Successfully");
+  //         setAppliedJobs((prev) => [...prev, id]);
+  //       })
+  //       .catch((err) => alert("You are admin so you can't apply for this jobb " ,err));
+  //   } else {
+  //     setSid(id);
+  //     setIsOpen(true);
+  //   }
+  // };
+const handleCallNow = (id) => {
+  const token = localStorage.getItem("token");
+  const { role } = JSON.parse(localStorage.getItem("user")) || {}; 
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  if (token) {
+    // ✅ Check if already applied
+    if (appliedJobs.includes(id)) {
+      alert("⚠️ You have already applied for this job");
+      return;
+    }
+
+    dispatch(applyJob(id))
+      .unwrap()
+      .then(() => {
+        if (role === "user") {
           alert("✅ Applied Successfully");
           setAppliedJobs((prev) => [...prev, id]);
-        })
-        .catch((err) => alert("❌ Apply Failed: " + err.message));
-    } else {
-      setSid(id);
-      setIsOpen(true);
-    }
-  };
+        } else if (role === "admin") {
+          alert("❌ You are admin so you can't apply for this job");
+        } else if (role === "recruiter") {
+          alert("❌ You are recruiter so you can't apply for this job");
+        }
+      })
+       .catch((err) => {
+        console.log("Apply Job Error:", err);
+
+        // 🔹 Role-based alerts
+        if (user?.role === "Admin") {
+          alert("❌ Admins cannot apply for jobs.");
+        } else if (user?.role === "Recruiter") {
+          alert("❌ Recruiters cannot apply for jobs.");
+        } else {
+          // Handle backend error messages
+          const errorMsg =
+            err?.error ||               // backend directly sent object {error:"..."}
+            err?.response?.data?.error ||
+            err?.response?.data?.message ||
+            err?.message ||
+            "Unknown error";
+
+          alert(errorMsg);
+        }
+      });
+      // .catch((err) => {
+      //   console.error("Apply job error:", err);
+      //   alert("❌ Something went wrong while applying.");
+      // });
+  } else {
+    setSid(id);
+    setIsOpen(true);
+  }
+};
+
+
 
   // ✅ Updated Login Logic
   const handleLogin = async (e) => {
@@ -67,7 +123,7 @@ const CategoryJobsPage = () => {
         handleCallNow(sid);
       }
     } catch (err) {
-      alert("❌ Login Failed");
+      alert("Login Failed");
       console.error(err);
     }
   };
