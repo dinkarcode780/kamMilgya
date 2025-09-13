@@ -1,81 +1,4 @@
-// import React from "react";
-// import { useSelector } from "react-redux";
 
-// const Profile = () => {
-//   const user = useSelector((state) => state.auth.user);
-//   console.log(user);
-
-//   if (!user) return <div className="text-center mt-10">Loading user data...</div>;
-
-//   return (
-//   <div className="max-w-4xl mx-auto mt-8 mb-10 bg-white shadow-lg rounded-lg overflow-hidden">
-//   <div className="bg-blue-600 py-6 px-6 text-white text-center">
-//     <h2 className="text-2xl md:text-3xl font-semibold">User Profile</h2>
-//   </div>
-
-//   <div className="p-6">
-//     {/* Profile Image */}
-//     <div className="flex justify-center mb-6">
-//       {user.image ? (
-//         <img
-//           src={user.image}
-//           alt="Profile"
-//           className="w-28 h-28 rounded-full object-cover border-4 border-blue-600 shadow"
-//         />
-//       ) : (
-//         <div className="w-28 h-28 rounded-full border-4 border-blue-600 flex items-center justify-center text-gray-400 text-sm">
-//           No Image
-//         </div>
-//       )}
-//     </div>
-
-//     {/* User Info */}
-//     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700">
-//       <Detail label="Full Name" value={user.name} />
-//       <Detail label="Email" value={user.email} />
-//       <Detail label="Phone Number" value={user.phone} />
-//       {/* <Detail label="Date of Birth" value={user.dob} /> */}
-//       <Detail label="Gender" value={user.gender} />
-//       <Detail label="Qualification" value={user.qualification} />
-//       <Detail
-//         label="Skills"
-//         value={user.skills?.length ? user.skills.join(", ") : "N/A"}
-//       />
-//       <Detail label="Address" value={user.address} />
-//       <Detail label="Have Two-Wheeler" value={user.vehicle ? "Yes" : "No"} />
-//       <Detail
-//         label="Have Driving License"
-//         value={user.license ? "Yes" : "No"}
-//       />
-
-//       {user.resume && (
-//         <div className="md:col-span-2">
-//           <p className="font-medium">Resume</p>
-//           <a
-//             href={user.resume}
-//             target="_blank"
-//             rel="noopener noreferrer"
-//             className="text-blue-600 hover:underline break-all"
-//           >
-//             View Resume
-//           </a>
-//         </div>
-//       )}
-//     </div>
-//   </div>
-// </div>
-
-//   );
-// };
-
-// const Detail = ({ label, value }) => (
-//   <div>
-//     <label className="block font-medium text-sm text-gray-600 mb-1">{label}</label>
-//     <div className="border border-gray-300 rounded px-3 py-2 bg-gray-50">{value || "N/A"}</div>
-//   </div>
-// );
-
-// export default Profile;
 
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -99,6 +22,8 @@ const user = updatedUser || authUser;
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(user || {});
    const [imageFile, setImageFile] = useState(null);
+
+     const [isLoading, setIsLoading] = useState(false);
 
   if (!user) return <div className="text-center mt-10">Loading user data...</div>;
 
@@ -131,6 +56,7 @@ const user = updatedUser || authUser;
 
   const handleSubmit = (e) => {
   e.preventDefault();
+   setIsLoading(true);
 
   const formPayload = new FormData();
 
@@ -157,7 +83,11 @@ const user = updatedUser || authUser;
     })
     .catch((err) => {
       toast.error(err || "Update failed!");
-    });
+    })
+     .finally(() => {
+        setIsLoading(false); 
+      });
+    
 };
 
 
@@ -280,9 +210,16 @@ const user = updatedUser || authUser;
 
             <button
               type="submit"
-              className="md:col-span-2 bg-blue-600 text-white px-6 py-2 rounded-md shadow hover:bg-blue-700"
+               disabled={isLoading}
+              // className="md:col-span-2 bg-blue-600 text-white px-6 py-2 rounded-md shadow hover:bg-blue-700"
+              className={`md:col-span-2 px-6 py-2 rounded-md shadow ${
+    isLoading
+      ? "bg-gray-400 cursor-not-allowed"
+      : "bg-blue-600 text-white hover:bg-blue-700"
+  }`}
             >
-              Save Changes
+              {isLoading ? "Please wait…" : "Save Changes"}
+              {/* Save Changes */}
             </button>
           </form>
         )}

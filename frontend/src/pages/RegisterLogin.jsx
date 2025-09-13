@@ -55,7 +55,7 @@ const loginSubmit = async (e) => {
         <div className="p-8">
           <h2 className="text-3xl font-bold text-gray-800 mb-4">Welcome Back!</h2>
           <p className="text-gray-600 mb-6 text-sm">
-            <span>Employe</span> Login to your account to find or post jobs effortlessly.
+            <span>Employee</span> Login to your account to find or post jobs effortlessly.
           </p>
 
           <form onSubmit={loginSubmit} className="space-y-4">
