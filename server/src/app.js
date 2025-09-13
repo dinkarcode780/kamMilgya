@@ -20,8 +20,16 @@ const app = express();
 
 
 
+// app.use(cors({
+//   origin: ['https://kam-milgya-elil.vercel.app',"http://localhost:5173"],
+
+//   credentials: true,
+//    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+
+// }));
+
 app.use(cors({
-  origin: ['https://kam-milgya-elil.vercel.app',"http://localhost:5173"],
+  origin: ['https://kam-milgya.vercel.app/',"http://localhost:5173"],
 
   credentials: true,
    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
