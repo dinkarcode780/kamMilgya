@@ -314,8 +314,8 @@ const AllJobs = () => {
     dispatch(fetchJobs());
   }, [dispatch]);
 
-  const handleCallNow = (id, phoneNumber,e) => {
-    e.stopPropagation();
+  const handleCallNow = (id, phoneNumber) => {
+    // e.stopPropagation();
     const token = localStorage.getItem('token');
     
     if (token) {
@@ -406,8 +406,8 @@ const AllJobs = () => {
         {jobs.map((job) => (
           <div
             key={job._id}
-            className="border-l-4 border-[#0077B6] bg-white p-5 rounded-xl shadow-md hover:shadow-lg transition-all cursor-pointer"
-            onClick={() => window.location.href = `/jobs/${job._id}`}
+            className="border-l-4 border-[#0077B6] bg-white p-5 rounded-xl shadow-md hover:shadow-lg transition-all"
+            // onClick={() => window.location.href = `/jobs/${job._id}`}
           >
             <div className="flex justify-between items-start mb-2">
               <div className="flex-grow">
@@ -466,22 +466,22 @@ const AllJobs = () => {
             {appliedJobs.includes(job._id) ? (
               <div className="text-green-700 font-semibold text-center py-2 border-2 border-green-600 rounded-lg"
               
-              onClick={(e) => {
-                  e.stopPropagation(); 
-                  if (job?.phone) {
-                    window.location.href = `tel:${job.phone}`;
-                  } else {
-                    alert("Phone number not available");
-                  }
-                }}
+              // onClick={(e) => {
+              //     e.stopPropagation(); 
+              //     if (job?.phone) {
+              //       window.location.href = `tel:${job.phone}`;
+              //     } else {
+              //       alert("Phone number not available");
+              //     }
+              //   }}
 
               >
                 📞 {job?.phone || "No Number"}
               </div>
             ) : (
               <button
-                // onClick={() => handleCallNow(job._id, job?.phone)}
-                onClick={(e) => handleCallNow(job._id, job?.phone, e)}
+                onClick={() => handleCallNow(job._id, job?.phone)}
+                // onClick={(e) => handleCallNow(job._id, job?.phone, e)}
                 className="w-full border-2 border-[#0077B6] text-[#0077B6] hover:bg-[#0077B6] hover:text-white text-sm py-2 rounded-lg transition duration-200 cursor-pointer"
               >
                 Apply & Call
