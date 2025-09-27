@@ -94,64 +94,136 @@ const EmployerRegister = () => {
   //   }
   // }, [recruiter, navigate]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
 
-    if (
-      !formData.companyName ||
-      !formData.email ||
-      !formData.contactPhone ||
-      !formData.password
-    ) {
-      toast.error("Please fill all required fields");
-      return;
+//     if (
+//       !formData.companyName ||
+//       !formData.email ||
+//       !formData.contactPhone ||
+//       !formData.password
+//     ) {
+//       toast.error("Please fill all required fields");
+//       return;
+//     }
+
+//     if (!formData.email) {
+//       toast.error("Eamil are required fields");
+//       return;
+//     }
+
+//     // Phone number validation
+//     if (!/^\d{10}$/.test(formData.contactPhone)) {
+//       toast.error("Phone number must be exactly 10 digits");
+//       return;
+//     }
+
+//     if (formData.password !== formData.confirmPassword) {
+//       toast.error("Passwords do not match!");
+//       return;
+//     }
+
+// //  if (formData.contactPhone === formData.contactPhone) {
+// //       toast.error("already exist Number");
+// //       return;
+// //     }
+
+// //     if (formData.email === formData.email) {
+// //       toast.error("already exist Email");
+// //       return;
+// //     }
+  
+
+//     try {
+//       const payload = new FormData();
+//       Object.entries(formData).forEach(([key, value]) =>
+//         payload.append(key, value)
+//       );
+
+//       const resultAction = await dispatch(employeRegister(payload));
+
+//       if (employeRegister.fulfilled.match(resultAction)) {
+//         toast.success("Recruiter Registered Successfully!");
+//         navigate("/employer-dash");
+//       } else {
+//         //   const errorMsg =
+//         //   resultAction.payload?.message || "Registration failed. Please try again.";
+//         // toast.error(errorMsg);
+
+//         toast.error(resultAction.payload?.message || "Registration failed");
+//       }
+//     } catch (err) {
+//       toast.error("Something went wrong");
+//       //  toast.error(err.message || "Something went wrong");
+//     }
+//   };
+
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  // Validate required fields
+  if (
+    !formData.companyName ||
+    !formData.email ||
+    !formData.contactPhone ||
+    !formData.password
+  ) {
+    toast.error("Please fill all required fields");
+    return;
+  }
+
+  // Email validation (basic)
+  if (!formData.email.includes("@")) {
+    toast.error("Please enter a valid email");
+    return;
+  }
+
+  // Phone number validation
+  if (!/^\d{10}$/.test(formData.contactPhone)) {
+    toast.error("Phone number must be exactly 10 digits");
+    return;
+  }
+
+  // Password match validation
+  if (formData.password !== formData.confirmPassword) {
+    toast.error("Passwords do not match!");
+    return;
+  }
+
+  try {
+    const payload = new FormData();
+    Object.entries(formData).forEach(([key, value]) =>
+      payload.append(key, value)
+    );
+
+    const resultAction = await dispatch(employeRegister(payload));
+
+    if (employeRegister.fulfilled.match(resultAction)) {
+      toast.success("Recruiter Registered Successfully!");
+      navigate("/employer-dash");
+    } else {
+      // Extract the error message from the payload
+      const errorMsg = resultAction.payload?.message || "Registration failed. Please try again.";
+      toast.error(errorMsg);
     }
+  } catch (err) {
+    // Fallback for unexpected errors
+    toast.error(err.message || "Something went wrong");
+  }
+};
 
-    if (!formData.email) {
-      toast.error("Eamil are required fields");
-      return;
-    }
-
-    // Phone number validation
-    if (!/^\d{10}$/.test(formData.contactPhone)) {
-      toast.error("Phone number must be exactly 10 digits");
-      return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      toast.error("Passwords do not match!");
-      return;
-    }
-
-    try {
-      const payload = new FormData();
-      Object.entries(formData).forEach(([key, value]) =>
-        payload.append(key, value)
-      );
-
-      const resultAction = await dispatch(employeRegister(payload));
-
-      if (employeRegister.fulfilled.match(resultAction)) {
-        toast.success("Recruiter Registered Successfully!");
-        navigate("/employer-dash");
-      } else {
-        //   const errorMsg =
-        //   resultAction.payload?.message || "Registration failed. Please try again.";
-        // toast.error(errorMsg);
-
-        toast.error(resultAction.payload?.message || "Registration failed");
-      }
-    } catch (err) {
-      toast.error("Something went wrong");
-      //  toast.error(err.message || "Something went wrong");
-    }
-  };
+  // useEffect(() => {
+  //   if (recruiter?.role === "recruiter") {
+  //     navigate("/employer-dash");
+  //   }
+  // }, [recruiter, navigate]);
 
   useEffect(() => {
-    if (recruiter?.role === "recruiter") {
-      navigate("/employer-dash");
-    }
-  }, [recruiter, navigate]);
+  if (recruiter?.role === "recruiter") {
+    navigate("/employer-dash");
+  }
+}, [recruiter, navigate]);
   return (
     <div className="min-h-screen bg-gradient-to-tr from-blue-100 to-blue-50 flex items-center justify-center px-4 py-8">
       <div className="bg-white shadow-2xl rounded-lg w-full max-w-5xl overflow-hidden grid grid-cols-1 md:grid-cols-2">
