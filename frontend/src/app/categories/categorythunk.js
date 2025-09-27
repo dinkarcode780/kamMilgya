@@ -80,7 +80,6 @@ export const createCategory = createAsyncThunk(
           },
         });
 
-        console.log(response, "Category updated successfully"); // ✅ Yeh ab sahi jagah pe hai
         
         return response.data;
       } catch (error) {

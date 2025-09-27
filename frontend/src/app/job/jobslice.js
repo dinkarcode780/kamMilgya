@@ -207,7 +207,6 @@ const jobSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchJobs.fulfilled, (state, action) => {
-           console.log("Job fulfilled payload:", action.payload); // ✅ add this
         state.loading = false;
 
         state.allJobs = action.payload;

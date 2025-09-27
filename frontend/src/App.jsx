@@ -44,7 +44,7 @@ const App = () => {
   const dispatch = useDispatch();
 
   const user = useSelector(s => s.auth.user)
-  console.log("first", user)
+
 
   useEffect(() => {
     // dispatch(fetchCurrentUser());

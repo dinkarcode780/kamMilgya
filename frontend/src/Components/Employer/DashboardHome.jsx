@@ -19,9 +19,15 @@ const DashboardHome = () => {
   //  const { postedJobs, appliedJobs, loading } = useSelector((state) => state.job);
     const { postedJobs } = useSelector((state) => state.job);
   const { users } = useSelector((state) => state.admin);
-    const { employwer} = useSelector((state) => state.admin);
+    // const { employwer} = useSelector((state) => state.admin);
+    const { recruiters} = useSelector((state) => state.admin);
+    
 
-    console.log(employwer,);
+//     const adminState = useSelector((state) => state.admin);
+// console.log("adminState =>", adminState);
+
+//     console.log("empp", recruiters,);
+//     console.log("userrrr",users)
     
 
 

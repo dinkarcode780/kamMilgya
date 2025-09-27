@@ -17,14 +17,14 @@ const navigate = useNavigate();
 const auth = useSelector((state) => state.auth);
 const dispatch = useDispatch();
 
-console.log(auth, "auth in footer");
+
 
 // Check if any user is logged in (user, recruiter, or admin)
 const currentUser = auth?.user || auth?.recruiter;
 const userRole = auth?.user?.role || auth?.recruiter?.role || (auth?.recruiter ? 'recruiter' : null);
 
-console.log("Current user:", currentUser);
-console.log("User role:", userRole);
+// console.log("Current user:", currentUser);
+// console.log("User role:", userRole);
 
 const handleLogout = async () => {
   try {

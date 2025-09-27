@@ -65,7 +65,19 @@ const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
+   
+
+      if (Number(formData.jobpost) < 1) {
+    toast.error("❌ No. of job posts must be at least 1");
+    return;
+  }
+
+  if (Number(formData.experience) < 0) {
+    toast.error("❌ Experience cannot be negative");
+    return;
+  }
+
+   setIsSubmitting(true);
 
     const token = recruiter?.token || localStorage.getItem("token");
     try {
@@ -171,6 +183,7 @@ const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY;
               value={formData.jobpost}
               onChange={handleChange}
               required
+              min="1"
               className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2"
               placeholder="e.g., 101"
             />
@@ -246,6 +259,7 @@ const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY;
               name="experience"
               value={formData.experience}
               onChange={handleChange}
+               min="0"
               className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2"
               placeholder="e.g., 2"
             />

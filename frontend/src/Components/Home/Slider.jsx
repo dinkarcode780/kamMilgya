@@ -76,7 +76,7 @@ const Slider = () => {
       </div>
 
       {/* Mobile Slider */}
-      <div className="lg:hidden w-full relative overflow-hidden">
+      {/* <div className="lg:hidden w-full relative overflow-hidden">
         <div
           className="flex transition-transform duration-500 ease-in-out"
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
@@ -86,10 +86,10 @@ const Slider = () => {
               <img src={img} alt={`Mobile Slide ${index}`} className="w-full h-full object-cover" />
             </div>
           ))}
-        </div>
+        </div> */}
 
         {/* Dots */}
-        <div className="absolute bottom-3 left-0 right-0 flex justify-center space-x-2">
+        {/* <div className="absolute bottom-3 left-0 right-0 flex justify-center space-x-2">
           {mobileImages.map((_, index) => (
             <button
               key={index}
@@ -98,7 +98,53 @@ const Slider = () => {
             />
           ))}
         </div>
+      </div> */}
+
+      {/* Mobile Slider */}
+<div className="lg:hidden w-full relative overflow-hidden">
+  <div
+    className="flex transition-transform duration-500 ease-in-out"
+    style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+  >
+    {mobileImages.map((img, index) => (
+      <div key={index} className="w-full flex-shrink-0 relative">
+        <img
+          src={img}
+          alt={`Mobile Slide ${index}`}
+          className="w-full h-[400px] object-cover"
+        />
       </div>
+    ))}
+  </div>
+
+  {/* Arrows - Always Visible */}
+  <button
+    onClick={prevSlide}
+    className="absolute left-3 top-1/2 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-md z-10"
+  >
+    <FaChevronLeft size={16} />
+  </button>
+  <button
+    onClick={nextSlide}
+    className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-md z-10"
+  >
+    <FaChevronRight size={16} />
+  </button>
+
+  {/* Dots */}
+  <div className="absolute bottom-3 left-0 right-0 flex justify-center space-x-2">
+    {mobileImages.map((_, index) => (
+      <button
+        key={index}
+        onClick={() => setCurrentSlide(index)}
+        className={`w-3 h-3 rounded-full ${
+          currentSlide === index ? "bg-[#009688]" : "bg-gray-400"
+        }`}
+      />
+    ))}
+  </div>
+</div>
+
     </div>
   );
 };

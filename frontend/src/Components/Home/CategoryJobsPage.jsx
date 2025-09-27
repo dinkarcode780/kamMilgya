@@ -78,9 +78,9 @@ const handleCallNow = (id) => {
 
         // 🔹 Role-based alerts
         if (user?.role === "Admin") {
-          alert("❌ Admins cannot apply for jobs.");
+          alert("❌ Admin can't apply for jobs.");
         } else if (user?.role === "Recruiter") {
-          alert("❌ Recruiters cannot apply for jobs.");
+          alert("❌ Recruiters can't apply for jobs.");
         } else {
           // Handle backend error messages
           const errorMsg =

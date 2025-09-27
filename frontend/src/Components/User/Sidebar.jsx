@@ -26,7 +26,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <>
+    <div className='z-10'>
       <div className="md:hidden fixed  top-4 mt-14 left-4 ">
         <button onClick={() => setOpen(!open)} className="text-gray-800">
           {open ? <FaTimes size={24} /> : <FaBars size={24} />}
@@ -58,7 +58,7 @@ const Sidebar = () => {
           ))}
         </nav>
       </div>
-    </>
+    </div>
   );
 };
 

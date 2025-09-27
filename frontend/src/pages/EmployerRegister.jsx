@@ -21,6 +21,7 @@ const EmployerRegister = () => {
   const dispatch = useDispatch();
   // const { loading, error } = useSelector((state) => state.auth || {});
   // const { user: recruiter } = useSelector((state) => state.auth);
+  
   const {
     user: recruiterData,
     isLoading: loading,
@@ -28,6 +29,7 @@ const EmployerRegister = () => {
   } = useSelector((state) => state.employe);
 
   const recruiter = recruiterData?.user;
+
 
   // const Navigate = useNavigate();
   const navigate = useNavigate();
@@ -295,7 +297,8 @@ const EmployerRegister = () => {
         : "bg-gray-300 text-gray-500 cursor-not-allowed"
     }`}
           >
-            {loading ? "Registering..." : "Register"}
+             {loading ? "Please wait..." : "Register"}
+            {/* {loading ? "Registering..." : "Register"} */}
           </button>
 
           <p className="text-sm text-center text-gray-500 mt-4">

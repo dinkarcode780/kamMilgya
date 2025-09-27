@@ -32,8 +32,10 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const { user, recruiter } = useSelector((state) => state.auth);
-  const isLoggedIn = !!user || !!recruiter; // Check for either user or recruiter
+  const isLoggedIn = !!user || !!recruiter; 
   const role = user?.role || recruiter?.role || null;
+
+  
 
   // const handleLogout = async () => {
   //   await dispatch(logoutUser());
@@ -41,8 +43,8 @@ const Navbar = () => {
   // };
 
   const handleLogout = async () => {
-  await dispatch(logoutUser()); // Redux state clear
-  localStorage.removeItem("recruiter"); // recruiter token cleanup (optional for user)
+  await dispatch(logoutUser()); 
+  localStorage.removeItem("recruiter"); 
   
   // Redirect based on role
   if (role === "recruiter") {
@@ -109,6 +111,21 @@ const Navbar = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+
+//   useEffect(() => {
+//   if (!recruiter) {
+//     const storedRecruiter = localStorage.getItem("recruiter");
+//     if (storedRecruiter) {
+//       // force sync recruiter into redux if missing
+//       dispatch({
+//         type: "auth/registerRecruiter/fulfilled",
+//         payload: { user: JSON.parse(storedRecruiter) },
+//       });
+//     }
+//   }
+// }, [recruiter, dispatch]);
+
 
   return (
     <nav ref={menuRef} className="bg-white shadow-lg py-3 sticky top-0 z-50">
